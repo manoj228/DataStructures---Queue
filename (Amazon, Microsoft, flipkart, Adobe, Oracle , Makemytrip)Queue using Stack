@@ -1,0 +1,92 @@
+//Queue using stack
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct stack
+{
+    int data;
+    struct stack *link;
+};
+
+struct queue 
+{
+ struct stack *stack1 ;   
+};
+
+void push(struct stack **s,int x)
+{
+    struct stack *temp = (struct stack *)malloc(sizeof(struct stack));
+    
+    if(temp == NULL)
+    {
+        printf("\nstack overflow");
+        getchar();
+        exit(0);
+    } 
+    temp -> data = x;
+    temp -> link = (*s);
+    (*s) = temp;
+}
+
+void enqueue(struct queue *q,int x)
+{
+    push(&q->stack1,x);
+} 
+
+int pop(struct stack **top_ref)
+{
+    struct stack *top;
+    int res;
+    
+    if((*top_ref) == NULL)
+    {
+        printf("\nStack Underflow");
+        getchar();
+        exit(0);
+    }
+    else
+    {
+        top = (*top_ref);
+        res = top -> data;
+        (*top_ref) = (*top_ref) -> link;
+        free(top);
+        return res;
+    }
+}
+
+int dequeue(struct queue *q)
+{
+    int x,res; 
+    
+    if(q -> stack1 == NULL)
+    {
+        printf("\nQueue is empty");
+        getchar();
+        exit(0);
+    }
+    else if(q->stack1->link == NULL)
+    return pop(&q->stack1);
+    else
+    {
+        x = pop(&q->stack1);
+        res = dequeue(q);
+        push(&q->stack1,x);
+        return res;
+    }
+}
+
+int main()
+{
+    struct queue *q = (struct queue *)malloc(sizeof(struct queue));
+    q -> stack1 = NULL ; 
+
+    enqueue(q,10);
+    enqueue(q,20);
+    enqueue(q,30);
+    
+    printf("%d\n",dequeue(q));
+    printf("%d\n",dequeue(q));
+    
+    return 0;
+}
