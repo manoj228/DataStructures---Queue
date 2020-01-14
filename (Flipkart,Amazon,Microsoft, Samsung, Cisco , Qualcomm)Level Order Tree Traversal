@@ -1,0 +1,72 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *left, *right;
+};
+
+struct node *newnode(int data)
+{
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp -> data = data;
+    temp -> left = temp ->right = NULL;
+    
+    return temp;
+}
+
+struct node **createQueue(int *front,int *rear)
+{
+    struct node **queue = (struct node **)malloc(sizeof(struct node*));
+    *front = *rear = 0;
+    
+    return queue;
+}
+
+void enqueue(struct node **queue,int *rear,struct node *temp)
+{
+    queue[*rear] = temp;
+    (*rear)++;
+}
+
+struct node* dequeue(struct node **queue,int *front)
+{
+    (*front)++;
+    return queue[*front-1];
+}
+
+void printlevelorder(struct node *root)
+{
+    int rear , front ;
+    struct node **queue = createQueue(&front,&rear);
+    struct node *temp = root;
+    
+    while(temp)
+    {
+        printf("%d ",temp->data);
+        
+        if(temp->left)
+        enqueue(queue,&rear,temp->left);
+        
+        if(temp->right)
+        enqueue(queue,&rear,temp->right);
+        
+        temp = dequeue(queue,&front);
+    }
+    
+}
+
+int main()
+{
+   struct node *root = newnode(1);
+   root -> left = newnode(2);
+   root -> right = newnode(3);
+   root -> left -> left = newnode(4);
+   root -> left -> right = newnode(5);
+   
+   printlevelorder(root);
+
+    return 0;
+}
